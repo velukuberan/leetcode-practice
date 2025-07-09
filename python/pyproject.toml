@@ -1,0 +1,26 @@
+[project]
+name = "leet-code-practice"
+version = "0.1.0"
+description = "Practice Leet Code problems atleast 1 daily"
+requires-python = ">=3.9"
+
+[dependency-groups]
+dev = [
+    "mypy",
+    "pytest",
+    "pytest-cov",
+    "ruff",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+files =["src", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=src"
