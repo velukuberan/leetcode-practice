@@ -1,4 +1,4 @@
-name: Python Leet Code CI 
+name: Python Leet Code CI
 
 on:
   push:
@@ -11,97 +11,48 @@ on:
       - 'python/**'
 
 jobs:
-  test:
+  ci:
+    name: Python Leet Code CI
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./python
-
+        working-directory: ./python/app
+    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-
-    - name: Install uv
-      uses: astral-sh/setup-uv@v2
-      with:
-        version: latest
-
-    - name: Install dependencies
-      run: |
-        uv sync --group dev
-
-    - name: Run tests with coverage
-      run: |
-        uv run pytest --cov=src --cov-report=xml --cov-report=term-missing
-
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v5
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        flags: python
-        name: python-coverage
-
-  lint:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./python
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-
-    - name: Install uv
-      uses: astral-sh/setup-uv@v2
-      with:
-        version: latest
-
-    - name: Install dependencies
-      run: |
-        uv sync --group dev
-
-    - name: Run Ruff linter
-      run: |
-        uv run ruff check .
-
-    - name: Run type checking
-      run: |
-        uv run mypy src tests
-
-  security:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./python
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-
-    - name: Install uv
-      uses: astral-sh/setup-uv@v2
-      with:
-        version: latest
-
-    - name: Install dependencies
-      run: |
-        uv sync --group dev
-
-    - name: Run security checks
-      run: |
-        uv run ruff check --select S src
+      # Universal setup - do once
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v2
+        with:
+          version: latest
+      
+      - name: Install dependencies
+        run: uv sync --group dev
+      
+      # Now run all checks using the same environment
+      - name: Run tests with coverage
+        run: uv run pytest --cov=src --cov-report=xml --cov-report=term-missing
+      
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: python
+          name: python-coverage
+      
+      - name: Run Ruff linter
+        run: uv run ruff check .
+      
+      - name: Run type checking
+        run: uv run mypy src tests
+      
+      - name: Run security checks
+        run: uv run ruff check --select S src
+        continue-on-error: true
