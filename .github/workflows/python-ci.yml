@@ -16,8 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./python/app
-    
+        working-directory: ./python/app    
     steps:
       # Universal setup - do once
       - name: Checkout code
