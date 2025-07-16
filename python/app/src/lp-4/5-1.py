@@ -1,7 +1,8 @@
 import sys
 import ctypes
+from typing import List, Any
 
-def get_list_allocated(lst):
+def get_list_allocated(lst: List[Any]) -> int:
     """Return the actual capacity of a Python list (CPython-specific)."""
     class PyListObject(ctypes.Structure):
         _fields_ = [
@@ -13,10 +14,9 @@ def get_list_allocated(lst):
                 ]
 
     ptr = ctypes.cast(id(lst), ctypes.POINTER(PyListObject))
-    return ptr.contents.allocated
+    return int(ptr.contents.allocated)
 
-data = []
-
+data: List[None] = []
 n = 100
 
 print(f"{'':3}Size of None is {sys.getsizeof(None)}")
