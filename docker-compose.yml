@@ -6,11 +6,11 @@ services:
       context: ./python
       dockerfile: Dockerfile
     volumes:
-      - ./python:/app
+      - ./python/app:/app
       - python_cache:/root/.cache
     working_dir: /app
     environment:
-      - PYTHONPATH=/app/app/src
+      - PYTHONPATH=/app/src
     command: tail -f /dev/null  # Keep container running for development
 
   php:
