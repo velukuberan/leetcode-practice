@@ -1,4 +1,4 @@
-.PHONY: help build up down logs clean test python-test php-test typescript-test shell-python shell-php shell-typescript
+.PHONY: help build up down logs clean python test python-test php-test typescript-test shell-python shell-php shell-typescript
 
 # Default target
 help:
@@ -35,6 +35,10 @@ logs:
 # Clean everything
 clean:
 	docker-compose down -v --rmi all
+
+# Run Python file
+python:
+	docker-compose run --rm python python $(filter-out $@,$(MAKECMDGOALS))
 
 # Run all tests
 test: python-test php-test typescript-test

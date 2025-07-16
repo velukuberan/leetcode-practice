@@ -18,14 +18,14 @@ RUN apt-get update \
 RUN pip install --no-cache-dir uv
 
 # Copy pyproject.toml first for better caching
-COPY pyproject.toml .
+COPY app/pyproject.toml .
 
 # Install Python dependencies using uv (system-wide)
 RUN uv pip install --system -e . \
     && uv pip install --system mypy pytest pytest-cov ruff
 
 # Copy the entire app directory
-COPY app/ ./app/
+# COPY app/ ./app/
 
 # Create a non-root user
 RUN useradd --create-home --shell /bin/bash developer \
