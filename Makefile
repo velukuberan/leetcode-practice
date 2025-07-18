@@ -8,6 +8,7 @@ help:
 	@echo "  down         - Stop all services"
 	@echo "  logs         - Show logs from all services"
 	@echo "  clean        - Remove containers, networks, and volumes"
+	@echo "  python       - Run Python"
 	@echo "  test         - Run tests for all languages"
 	@echo "  python-test  - Run Python tests"
 	@echo "  php-test     - Run PHP tests"
@@ -36,9 +37,17 @@ logs:
 clean:
 	docker-compose down -v --rmi all
 
-# Run Python file
+# Run Python file - Fixed to handle arguments properly
 python:
-	docker-compose run --rm python python $(filter-out $@,$(MAKECMDGOALS))
+	@if [ "$(filter-out $@,$(MAKECMDGOALS))" = "" ]; then \
+		docker-compose run --rm python python; \
+	else \
+		docker-compose run --rm python python $(filter-out $@,$(MAKECMDGOALS)); \
+	fi
+
+# This prevents Make from treating arguments as targets
+%:
+	@:
 
 # Run all tests
 test: python-test php-test typescript-test
