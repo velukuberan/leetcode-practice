@@ -1,27 +1,54 @@
-import ctypes
+from typing import Any, Optional
 
+"""A dynamic array class akin to a simplified Python list"""
 class DynamicArray:
-    """A dynamic array class akin to a simplified Python list"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Create empty array"""
-        self._n = 0
-        self._capacity = 1
-        self._A = self._make_array(self._capacity)
+        self.capacity = 2
+        self.length = 0
+        self.arr = [0] * 2
+    
+    """Insert n in the last position of the array"""
+    def pushback(self, n: int) -> None:
+        if self.length == self.capacity:
+            self.resize()
 
-    def __len__(self):
-        """Return number of element stored in the array"""
-        return self._n
+        self.arr[self.length] = n
+        self.length += 1
 
-    def __getitem__(self, k):
-        """Return element at index k"""
-        if not 0 <= k < self._n:
-            raise IndexError('Invalid index')
-        return self._A[k]
+    """Resize the capacity into double the previous length"""
+    def resize(self) -> None:
+        self.capacity = 2 * self.capacity
+        new_arr = [0] * self.capacity
 
-    def append(self, obj):
-        """Add object to end of the array"""
-        if self._n == self._capacity:
-            self._resize(2 * self._capacity)
-        self._A[self._n] = obj
-        self._n += 1
+        """Copy old elements to new array"""
+        for i in range(self.length):
+            new_arr[i] = self.arr[i]
+
+        self.arr = new_arr
+
+    """Remove last element in the array"""
+    def pop(self) -> None:
+        if self.length > 0:
+            self.length -= 1
+
+    """Get value at the index """
+    def get(self, index: int) -> Optional[Any]:
+        if index < self.length:
+            return self.arr[index]
+    
+        return None
+
+    """Insert a value at the index i"""
+    def insert(self, index: int, value: int) -> None:
+        if index < self.length:
+            self.arr[index] = value
+            return
+
+    """Print the values"""
+    def print(self) -> None:
+        for i in range(self.length):
+            print(self.arr[i])
+        print()
+
